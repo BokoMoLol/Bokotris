@@ -67,7 +67,7 @@ function create() {
 
     // Set up input handlers
     this.input.keyboard.on('keydown-UP', rotate);
-    this.input.keyboard.on('keydown-DOWN', goDown);
+    this.input.keyboard.on('keydown-DOWN', () => goDown(true));
     this.input.keyboard.on('keydown-LEFT', () => goSide(-1));
     this.input.keyboard.on('keydown-RIGHT', () => goSide(1));
     this.input.keyboard.on('keydown-SPACE', goSpace);
@@ -145,6 +145,9 @@ function update() {
 
     // Draw the score
     this.add.text(10, 10, `Score: ${gameState.score}`, { fontSize: '20px', fill: '#FFF' });
+
+    // Update bullets
+    updateBullets();
 }
 
 function drawBlock(x, y, color) {
@@ -214,11 +217,13 @@ function goSpace() {
     freeze();
 }
 
-function goDown() {
-    gameState.figure.y++;
-    if (intersects()) {
-        gameState.figure.y--;
-        freeze();
+function goDown(isManual = false) {
+    if (isManual || gameState.state === "start") {
+        gameState.figure.y++;
+        if (intersects()) {
+            gameState.figure.y--;
+            freeze();
+        }
     }
 }
 
